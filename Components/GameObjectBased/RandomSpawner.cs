@@ -38,6 +38,15 @@ namespace PixelCrew.Components.GameObjectBased
             }
         }
 
+
+        public void DropImmediadate(GameObject[] items)
+        {
+            foreach(var item in items)
+            {
+                Spawn(item);
+            }
+        }
+
         private void Spawn(GameObject particle)
         {
             var instance = Instantiate(particle, transform.position, Quaternion.identity);
@@ -54,14 +63,14 @@ namespace PixelCrew.Components.GameObjectBased
 
             var middleAngleDelta = (100 - _sectorRotation - _sectorAngle) / 2;
             var rightBound = GetUnitOnCircle(middleAngleDelta);
-            //Handles.DrawLine(position, position + rightBound);
+            Handles.DrawLine(position, position + rightBound);
 
             var leftBound = GetUnitOnCircle(middleAngleDelta + _sectorAngle);
-            //Handles.DrawLine(position, position + leftBound);
-            //Handles.DrawWireArc(position, Vector3.forward, rightBound, _sectorAngle, 1f);
+            Handles.DrawLine(position, position + leftBound);
+            Handles.DrawWireArc(position, Vector3.forward, rightBound, _sectorAngle, 1f);
 
-            //Handles.color = new Color(1f, 1f, 1f, 0.1f);
-            //Handles.DrawSolidArc(position, Vector3.forward, rightBound, _sectorAngle, 1f);
+            Handles.color = new Color(1f, 1f, 1f, 0.1f);
+            Handles.DrawSolidArc(position, Vector3.forward, rightBound, _sectorAngle, 1f);
 
         }
 

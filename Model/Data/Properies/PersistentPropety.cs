@@ -7,8 +7,8 @@ namespace PixelCrew.Model.Data.Properies
     [Serializable]
     public abstract class PersistentPropety<TPropertyType> 
     {
-        [SerializeField] private TPropertyType _value;//что бы отображалось в редакторе
-        private TPropertyType _stored;//то что на диске
+        [SerializeField] protected TPropertyType _value;//что бы отображалось в редакторе
+        protected TPropertyType _stored;//то что на диске
         private TPropertyType _defaultValue;//если нет то дефолтное значение
 
         public delegate void OnPropertyChanged(TPropertyType newValue, TPropertyType oldValue);

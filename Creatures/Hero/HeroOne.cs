@@ -55,7 +55,7 @@ namespace PixelCrew.Creatures.Hero
 
         public void OnHealthChanged(int currentHealth)
         {
-            _session.Data.Hp = currentHealth;//обновим данные в сесии
+            _session.Data.Hp.Value = currentHealth;//обновим данные в сесии
         }
 
         private void Start() 
@@ -65,7 +65,8 @@ namespace PixelCrew.Creatures.Hero
             var health = GetComponent<HealthComponent>(); //взять значение при первой инициализации
             _session.Data.Inventory.OnChanged += OnInvetoryChanged; //подписываемся на функцию - складывать ссылки на наши методы
             _session.Data.Inventory.OnChanged += AnotherHandler; //выводить все изменения в инвентаре
-            health.SetHealth(_session.Data.Hp); //передача значениями сесии и героя в HealthComponent
+
+            health.SetHealth(_session.Data.Hp.Value); //передача значениями сесии и героя в HealthComponent
 
             UpdateHeroWeapom(); //взять данные и обновить предстовления героя
         }
