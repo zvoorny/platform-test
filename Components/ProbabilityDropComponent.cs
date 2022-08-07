@@ -55,8 +55,8 @@ namespace PixelCrew.Components
             [Range(0f,100f)]public float Probality;//рандомность
         }
 
-        [Serializable]
-        public class DropEvent : UnityEvent<GameObject[]>
-        { }
     }
+    [Serializable]
+    public class DropEvent : UnityEvent<GameObject[]>
+    { }
 }

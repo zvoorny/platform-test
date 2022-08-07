@@ -48,6 +48,14 @@ namespace PixelCrew.Creatures.Hero
             }
         }
 
+        public void OnUse(InputAction.CallbackContext context) // action - space
+        {
+            if (context.performed) //когда отпустили
+            {
+                _hero.UsePosition(); //вызов метода атаки
+            }
+        }
+
 
     }
 }

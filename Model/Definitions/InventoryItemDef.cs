@@ -28,7 +28,10 @@ namespace PixelCrew.Model.Definitions
     public struct ItemDef//не можем мен€ть так как описание
     {
         [SerializeField] private string _id;
+        [SerializeField] private bool _isStackable;//что бы не стакались объекты
         public string Id => _id;//дл€ доступа из вне
+
+        public bool IsStackable => _isStackable;
         public bool IsVoid => string.IsNullOrEmpty(_id); //если id пустое то это пустой itemDef
     }
 }
