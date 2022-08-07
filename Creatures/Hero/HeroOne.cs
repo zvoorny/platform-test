@@ -1,6 +1,7 @@
 using PixelCrew.Components.ColliderBased;
 using PixelCrew.Components.Health;
 using PixelCrew.Model;
+using PixelCrew.Model.Definitions;
 using PixelCrew.Utils;
 using System;
 using System.Collections;
@@ -37,6 +38,8 @@ namespace PixelCrew.Creatures.Hero
         [SerializeField] private int _superThrowParticles; //сколько мечей кидать
         [SerializeField] private float _superThrowDelay; //между каждым броском сколько сек
 
+       
+
         private static readonly int ThrowKey = Animator.StringToHash("throw");
         private static readonly int IsOnWall = Animator.StringToHash("is-on-wall");//получаем переменную у аниматора
 
@@ -50,7 +53,7 @@ namespace PixelCrew.Creatures.Hero
         private int SwordCount => _session.Data.Inventory.Count("Sword"); //получение меча в инвентаре
 
 
-
+        private HealthComponent _health;
         private GameSession _session; //переменная сессии
 
         public void OnHealthChanged(int currentHealth)
@@ -61,19 +64,20 @@ namespace PixelCrew.Creatures.Hero
         private void Start() 
         {
             _session = FindObjectOfType<GameSession>(); //находим в сессии нужный нам объект
-          
-            var health = GetComponent<HealthComponent>(); //взять значение при первой инициализации
+
+            _health = GetComponent<HealthComponent>(); //взять значение при первой инициализации
             _session.Data.Inventory.OnChanged += OnInvetoryChanged; //подписываемся на функцию - складывать ссылки на наши методы
             _session.Data.Inventory.OnChanged += AnotherHandler; //выводить все изменения в инвентаре
-
-            health.SetHealth(_session.Data.Hp.Value); //передача значениями сесии и героя в HealthComponent
-
+            
+            _health.SetHealth(_session.Data.Hp.Value); //передача значениями сесии и героя в HealthComponent
+            
             UpdateHeroWeapom(); //взять данные и обновить предстовления героя
         }
 
         private void OnDestroy()
         {
             _session.Data.Inventory.OnChanged -= OnInvetoryChanged; //отписываемся что бы при следующем изменении все было ок
+            _session.Data.Hp.Value = DefsFacade.I.Player.MaxHealth;//мое
         }
         private void AnotherHandler(string id, int value)//выводить все изменение в инвентаре
         {
@@ -96,7 +100,7 @@ namespace PixelCrew.Creatures.Hero
         protected override void Update() //переопределение 
         {
             base.Update();
-
+            OnHealthChanged(_health.GetHealth());//мое
             var moveToSameDirection = Direction.x * transform.lossyScale.x > 0; //в какую сторону давим - true или false
             if(_wallCheck.isTouchingLayer && moveToSameDirection)
             {
@@ -288,7 +292,16 @@ namespace PixelCrew.Creatures.Hero
             _throwCooldown.Reset(); // делаем reset на cooldowan
 
         }
-        
+
+        public void UsePosition()//подобрать зелье
+        {
+            var potionCount = _session.Data.Inventory.Count("HealthPotion");
+            if(potionCount>0)
+            {
+                _health.ModifyHealth(5);
+                _session.Data.Inventory.Remove("HealthPotion",1);
+            }
+        }
 
     }
 }

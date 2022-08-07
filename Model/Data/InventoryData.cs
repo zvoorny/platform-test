@@ -23,15 +23,34 @@ namespace PixelCrew.Model.Data
             var itemDef = DefsFacade.I.Items.Get(id);
             if (itemDef.IsVoid) return; //если не существует в strucr такого объекта то выходим
 
-            var item = GetItem(id);
-            if(item == null)
+            var isFull = _inventory.Count >= DefsFacade.I.Player.InventorySize;//
+            if (itemDef.IsStackable)//если стакается
             {
-                item = new InventoryItemData(id);
-                _inventory.Add(item);
+
+                var item = GetItem(id);
+                if (item == null)
+                {
+                    if (isFull) return;//если полный инвентарь на тот или иной предмет то выходим
+                    item = new InventoryItemData(id);
+                    _inventory.Add(item);
+
+                }
+
+                item.Value += value; //добавляем количество если даже уже есть он в инвентаре
 
             }
-
-            item.Value += value; //добавляем количество если даже уже есть он в инвентаре
+            else//если нет то доабвить 1
+            {
+                var itemLast = DefsFacade.I.Player.InventorySize - _inventory.Count;// сколько осталось
+                value = Mathf.Min(itemLast, value);
+                for(int i=0;i<value;i++)
+                {
+                    var item = new InventoryItemData(id)
+                    { Value =1 };
+                    _inventory.Add(item);
+                }
+            }
+           
             OnChanged?.Invoke(id,Count(id));
         }
 
@@ -40,13 +59,29 @@ namespace PixelCrew.Model.Data
             var itemDef = DefsFacade.I.Items.Get(id);
             if (itemDef.IsVoid) return; //если не существует в strucr такого объекта то выходим
 
-            var item = GetItem(id);//получаем предмет
-            if (item == null) return;
+            if (itemDef.IsStackable)
+            {
+                var item = GetItem(id);//получаем предмет
+                if (item == null) return;
 
-            item.Value -= value;
+                item.Value -= value;
 
-            if(item.Value<=0)
-             _inventory.Remove(item);
+                if (item.Value <= 0)
+                    _inventory.Remove(item);
+            }
+            else //если не стакаются то удалить сразу все из инвентори
+            {
+                for(int i =0;i<value;i++)
+                {
+                    var item = GetItem(id);//получаем предмет
+                    if (item == null) return;
+
+                    _inventory.Remove(item);
+                }
+            }
+
+
+            
 
             OnChanged?.Invoke(id, Count(id));
         }

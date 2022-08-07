@@ -14,7 +14,7 @@ namespace PixelCrew.UI.Hud
         private void Start()
         {
             _session = FindObjectOfType<GameSession>();//на старте получаем сессию
-            _session.Data.Hp.onChanged += OnHealthChanged;//подписываемся на изменения
+            _session.Data.Hp.onChanged += OnHealthChanged;//подписываемся на изменения HP
             OnHealthChanged(_session.Data.Hp.Value, 0);//запустить первый раз
         }
 
@@ -23,6 +23,11 @@ namespace PixelCrew.UI.Hud
             var maxHealth = DefsFacade.I.Player.MaxHealth;
             var value = (float)newValue / maxHealth;//значение прогресс бара нормальзированое от 0 до 1
             _healthBar.SetProgress(value);
+        }
+
+        private void OnDestroy()
+        {
+            _session.Data.Hp.onChanged -= OnHealthChanged;//подписываемся на изменения
         }
 
 

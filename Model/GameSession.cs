@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using PixelCrew.Model.Definitions;
+using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace PixelCrew.Model
 {
@@ -7,13 +10,14 @@ namespace PixelCrew.Model
     {
 
         [SerializeField] private PlayerData _data; //данные у героя
-
+        
         public PlayerData Data => _data; // доступ извне 
         private PlayerData _save;
 
         /*что бы сохранять и чистить данные между lvl*/
         public void Awake()//запуск при запуске объкта
         {
+            LoadHud();
             int numGameSessions = FindObjectsOfType<GameSession>().Length;
             if (numGameSessions > 1)
             {
@@ -25,6 +29,11 @@ namespace PixelCrew.Model
                 DontDestroyOnLoad(this); //для загрузки первой сцены //создает хранилище внутри сцен которые не будет уничтожаться между сценами
             }
 
+        }
+
+        private void LoadHud()
+        {
+            SceneManager.LoadScene("Hud", LoadSceneMode.Additive);//прогрузить Hud
         }
 
         public void Save()

@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace PixelCrew.Model.Data.Properies
 {
+   
     public class ObservableProperty<TPropertyType>
     {
         [SerializeField] private TPropertyType _value;//сохранять его
